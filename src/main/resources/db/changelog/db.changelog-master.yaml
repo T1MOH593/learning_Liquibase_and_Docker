@@ -1,0 +1,7 @@
+databaseChangeLog:
+        - include:
+                 file: db/changelog/changeset/create-table-users.sql
+        - include:
+                 file: db/changelog/changeset/create-table-company.sql
+        - include:
+                 file: db/changelog/changeset/fill-users-and-company.sql
