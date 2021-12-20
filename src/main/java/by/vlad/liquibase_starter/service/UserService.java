@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 import static java.util.Comparator.comparing;
@@ -32,23 +33,23 @@ public class UserService {
         }
     }
 
-    public UserDto setPriceToUserDto(UserDto userDto) {
+    public BigDecimal setPriceToUserDto(UserDto userDto) {
         BelarusbankDto[] belarusbankDtos = restTemplate.getForEntity(PropertiesUtil.BELARUSBANK_URL,
                 BelarusbankDto[].class).getBody();
 
         if (belarusbankDtos != null) {
             userDto.setPrice(belarusbankDtos[1].getPrice());
         }
-        return userDto;
+        return userDto.getPrice();
     }
 
-    public BelarusbankDto getMostProfitableDepartment() {
+    public BigDecimal getMostProfitablePrice() {
         var belarusbankDtos = restTemplate.getForEntity(PropertiesUtil.BELARUSBANK_URL,
                 BelarusbankDto[].class).getBody();
         if (belarusbankDtos == null) {
-            return new BelarusbankDto();
+            return BigDecimal.ZERO;
         } else {
-            return Arrays.stream(belarusbankDtos).min(comparing(BelarusbankDto::getPrice)).get();
+            return Arrays.stream(belarusbankDtos).min(comparing(BelarusbankDto::getPrice)).get().getPrice();
         }
     }
 }
