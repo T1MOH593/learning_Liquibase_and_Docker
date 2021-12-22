@@ -1,9 +1,10 @@
-package by.vlad.liquibase_starter.service;
+package by.vlad.liquibase_starter.unit.service;
 
 import by.vlad.liquibase_starter.dto.BelarusbankDto;
 import by.vlad.liquibase_starter.entity.User;
 import by.vlad.liquibase_starter.mapper.UserDtoMapper;
 import by.vlad.liquibase_starter.repository.UserRepository;
+import by.vlad.liquibase_starter.service.UserService;
 import by.vlad.liquibase_starter.util.PropertiesUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private RestTemplate restTemplate;
-    @Spy
+
     private UserDtoMapper mapper;
 
     @InjectMocks
