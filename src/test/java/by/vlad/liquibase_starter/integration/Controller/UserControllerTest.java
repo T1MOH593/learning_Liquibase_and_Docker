@@ -19,6 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -58,32 +60,15 @@ public class UserControllerTest {
             .build();
     private final BelarusbankDto[] belarusbankDtos = new BelarusbankDto[]{belarusbankDto1, belarusbankDto2};
 
-//    @Container
-//    public static PostgreSQLContainer<?> postgresql = new PostgreSQLContainer<>("postgres:13");
+    @Container
+    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13");
 
-//    @Configuration
-//    @EnableJpaRepositories
-//    @EntityScan
-//    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-//        @Override
-//        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
-//            TestPropertyValues.of(
-//                    "spring.datasource.url=" + postgresql.getJdbcUrl(),
-//                    "spring.datasource.username=" + postgresql.getUsername(),
-//                    "spring.datasource.password=" + postgresql.getPassword(),
-//                    "spring.datasource.driver-class-name=" + postgresql.getDriverClassName())
-//                    .applyTo(configurableApplicationContext.getEnvironment());
-//        }
-//
-//        @Bean
-//        public SpringLiquibase springLiquibase(DataSource dataSource) {
-//            SpringLiquibase liquibase = new SpringLiquibase();
-//            liquibase.setDropFirst(true);
-//            liquibase.setDataSource(dataSource);
-//            liquibase.setChangeLog("classpath:/db/changelog/db.changelog-master.yml");
-//            return liquibase;
-//        }
-//    }
+    @DynamicPropertySource
+    static void postgresqlProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl);
+        registry.add("spring.datasource.password", postgreSQLContainer::getPassword);
+        registry.add("spring.datasource.username", postgreSQLContainer::getUsername);
+    }
 
     @Test
     void getUserWithPriceTest() throws Exception {
