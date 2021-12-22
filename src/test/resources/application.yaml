@@ -1,7 +1,4 @@
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: create
   datasource:
     password: postgres
     username: postgres
