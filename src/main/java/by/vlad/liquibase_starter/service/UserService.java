@@ -2,6 +2,7 @@ package by.vlad.liquibase_starter.service;
 
 import by.vlad.liquibase_starter.dto.BelarusbankDto;
 import by.vlad.liquibase_starter.dto.UserDto;
+import by.vlad.liquibase_starter.exception_handling.NoSuchEntityException;
 import by.vlad.liquibase_starter.mapper.UserDtoMapper;
 import by.vlad.liquibase_starter.repository.UserRepository;
 import by.vlad.liquibase_starter.util.PropertiesUtil;
@@ -30,7 +31,7 @@ public class UserService {
         var maybeUser = userRepository.findById(id);
 
         if (maybeUser.isEmpty()) {
-            return new UserDto();
+            throw new NoSuchEntityException("There is no user with id " + id);
         } else {
             return mapper.EntityToDto(maybeUser.get());
         }
