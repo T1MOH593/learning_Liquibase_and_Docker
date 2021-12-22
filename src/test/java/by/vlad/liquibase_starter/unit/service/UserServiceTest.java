@@ -32,7 +32,7 @@ public class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private RestTemplate restTemplate;
-
+    @Mock
     private UserDtoMapper mapper;
 
     @InjectMocks
