@@ -16,6 +16,7 @@ configurations {
 
 ext {
     set('testcontainersVersion', "1.16.2")
+    snippetsDir = file('build/generated-snippets')
 }
 
 repositories {
@@ -27,6 +28,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.liquibase:liquibase-core'
     implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
@@ -35,6 +37,15 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.testcontainers:junit-jupiter'
     testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.springframework.cloud:spring-cloud-contract-wiremock:3.1.0'
+}
+
+task stubJar (type: Jar) {
+    group = project.group
+    baseName(project.name)
+
+    from file("build/generated-snippets/stubs")
+    into file("${project.group}/${project.name}/${project.version}/mappings")
 }
 
 dependencyManagement {
