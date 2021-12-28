@@ -11,3 +11,7 @@ spring:
         physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
 server:
   port: 8081
+
+belarusbank:
+  api:
+    url: https://belarusbank.by/api/kursExchange

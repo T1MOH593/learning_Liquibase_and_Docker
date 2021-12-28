@@ -19,14 +19,13 @@ import java.math.BigDecimal;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @SpringBootTest
 @AutoConfigureWireMock(
         stubs = "classpath*:**/[group]/[artifact]/**/mappings/**/*.json",
         httpsPort = 443,
-        port = 8081)
+        port = 8082)
 @AutoConfigureMockMvc
 @TestPropertySource(properties = {
         "spring.jpa.hibernate.ddl-auto=validate"
@@ -53,8 +52,10 @@ public class WireMockUserControllerTest {
 
     @Test
     void getUserWithPriceTest() throws Exception {
-        wireMockServer.stubFor(get(PropertiesUtil.BELARUSBANK_URL)
-                .willReturn(aResponse()));
+        stubFor(get(urlEqualTo("/api/kursExchange"))
+        .willReturn(aResponse()
+                .withBodyFile("users_1.json")
+                .withHeader("Content-Type", "application/json; charset=utf-8")));
 
         mvc.perform(MockMvcRequestBuilders.get("/users/1"))
                 .andExpect(content().string(BigDecimal.TEN.toString()));
@@ -62,9 +63,13 @@ public class WireMockUserControllerTest {
 
     @Test
     void getMostProfitableDepartmentTest() throws Exception {
+        stubFor(get(urlEqualTo("/api/kursExchange"))
+                .willReturn(aResponse()
+                        .withBodyFile("users_1.json")
+                        .withHeader("Content-Type", "application/json; charset=utf-8")));
+
+
         mvc.perform(MockMvcRequestBuilders.get("/mostProfitableDepartment"))
-
-
                 .andExpect(content().string(BigDecimal.ONE.toString()));
 
     }

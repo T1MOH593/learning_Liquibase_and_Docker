@@ -5,7 +5,7 @@ import by.vlad.liquibase_starter.dto.UserDto;
 import by.vlad.liquibase_starter.exception_handling.NoSuchEntityException;
 import by.vlad.liquibase_starter.mapper.UserDtoMapper;
 import by.vlad.liquibase_starter.repository.UserRepository;
-import by.vlad.liquibase_starter.util.PropertiesUtil;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,6 +20,10 @@ public class UserService {
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
     private final UserDtoMapper mapper;
+
+    @Value( "${belarusbank.api.url}" )
+    private String belarusbankApiUrl;
+
 
     public UserService(UserRepository userRepository, RestTemplate restTemplate, UserDtoMapper mapper) {
         this.userRepository = userRepository;
@@ -38,7 +42,7 @@ public class UserService {
     }
 
     public BigDecimal setPriceToUserDto(UserDto userDto) {
-        BelarusbankDto[] belarusbankDtos = restTemplate.getForEntity(PropertiesUtil.BELARUSBANK_URL,
+        BelarusbankDto[] belarusbankDtos = restTemplate.getForEntity(belarusbankApiUrl,
                 BelarusbankDto[].class).getBody();
 
         if (belarusbankDtos != null) {
@@ -48,7 +52,7 @@ public class UserService {
     }
 
     public BigDecimal getMostProfitablePrice() {
-        var belarusbankDtos = restTemplate.getForEntity(PropertiesUtil.BELARUSBANK_URL,
+        var belarusbankDtos = restTemplate.getForEntity(belarusbankApiUrl,
                 BelarusbankDto[].class).getBody();
         if (belarusbankDtos == null) {
             return BigDecimal.ZERO;
