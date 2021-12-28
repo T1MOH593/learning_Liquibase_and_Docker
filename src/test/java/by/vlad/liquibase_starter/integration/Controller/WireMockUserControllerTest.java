@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.math.BigDecimal;
 
+import static by.vlad.liquibase_starter.util.TestPropertiesUtil.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -40,6 +41,8 @@ public class WireMockUserControllerTest {
     @Autowired
     private WireMockServer wireMockServer;
 
+    private static final String API_KURS_EXCHANGE_URL = "/api/kursExchange";
+
 //    @Container
 //    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:13");
 //
@@ -52,24 +55,23 @@ public class WireMockUserControllerTest {
 
     @Test
     void getUserWithPriceTest() throws Exception {
-        stubFor(get(urlEqualTo("/api/kursExchange"))
+        stubFor(get(urlEqualTo(API_KURS_EXCHANGE_URL))
         .willReturn(aResponse()
                 .withBodyFile("users_1.json")
                 .withHeader("Content-Type", "application/json; charset=utf-8")));
 
-        mvc.perform(MockMvcRequestBuilders.get("/users/1"))
+        mvc.perform(MockMvcRequestBuilders.get(USERS_1_URL))
                 .andExpect(content().string(BigDecimal.TEN.toString()));
     }
 
     @Test
     void getMostProfitableDepartmentTest() throws Exception {
-        stubFor(get(urlEqualTo("/api/kursExchange"))
+        stubFor(get(urlEqualTo(API_KURS_EXCHANGE_URL))
                 .willReturn(aResponse()
                         .withBodyFile("users_1.json")
                         .withHeader("Content-Type", "application/json; charset=utf-8")));
 
-
-        mvc.perform(MockMvcRequestBuilders.get("/mostProfitableDepartment"))
+        mvc.perform(MockMvcRequestBuilders.get(MOST_PROFITABLE_DEPARTMENT_URL))
                 .andExpect(content().string(BigDecimal.ONE.toString()));
 
     }

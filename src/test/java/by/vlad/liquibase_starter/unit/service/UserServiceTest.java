@@ -1,17 +1,16 @@
 package by.vlad.liquibase_starter.unit.service;
 
+import by.vlad.liquibase_starter.configuration.ServiceConfiguration;
 import by.vlad.liquibase_starter.dto.BelarusbankDto;
 import by.vlad.liquibase_starter.entity.User;
 import by.vlad.liquibase_starter.mapper.UserDtoMapper;
 import by.vlad.liquibase_starter.repository.UserRepository;
 import by.vlad.liquibase_starter.service.UserService;
-import by.vlad.liquibase_starter.util.PropertiesUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -19,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static by.vlad.liquibase_starter.util.TestPropertiesUtil.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -34,9 +34,13 @@ public class UserServiceTest {
     private RestTemplate restTemplate;
     @Mock
     private UserDtoMapper mapper;
-
+    @Mock
+    private ServiceConfiguration serviceConfiguration;
     @InjectMocks
     private UserService userService;
+
+    @Value( "${belarusbank.api.url}" )
+    private String belarusbankApiUrl;
 
     private final BelarusbankDto belarusbankDto1 = BelarusbankDto.builder()
             .price(BigDecimal.TEN)
@@ -57,7 +61,7 @@ public class UserServiceTest {
     @Test
     void setPriceToUserDtoTest() {
         doReturn(new ResponseEntity<>(belarusbankDtos, HttpStatus.OK)).when(restTemplate)
-                .getForEntity(PropertiesUtil.BELARUSBANK_URL, BelarusbankDto[].class);
+                .getForEntity(belarusbankApiUrl, BelarusbankDto[].class);
 
         var price = userService.getMostProfitablePrice();
         assertThat(price).isEqualTo(belarusbankDto2.getPrice());
@@ -66,7 +70,7 @@ public class UserServiceTest {
     @Test
     void getMostProfitablePriceTest() {
         doReturn(new ResponseEntity<>(belarusbankDtos, HttpStatus.OK)).when(restTemplate)
-                .getForEntity(PropertiesUtil.BELARUSBANK_URL, BelarusbankDto[].class);
+                .getForEntity(belarusbankApiUrl, BelarusbankDto[].class);
 
         var price = userService.getMostProfitablePrice();
         assertThat(price).isEqualTo(belarusbankDto2.getPrice());

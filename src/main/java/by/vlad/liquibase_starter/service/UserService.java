@@ -1,10 +1,12 @@
 package by.vlad.liquibase_starter.service;
 
+import by.vlad.liquibase_starter.configuration.ServiceConfiguration;
 import by.vlad.liquibase_starter.dto.BelarusbankDto;
 import by.vlad.liquibase_starter.dto.UserDto;
 import by.vlad.liquibase_starter.exception_handling.NoSuchEntityException;
 import by.vlad.liquibase_starter.mapper.UserDtoMapper;
 import by.vlad.liquibase_starter.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,21 +17,23 @@ import java.util.Arrays;
 import static java.util.Comparator.comparing;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
     
     private final UserRepository userRepository;
     private final RestTemplate restTemplate;
     private final UserDtoMapper mapper;
+    private final ServiceConfiguration serviceConfiguration;
 
     @Value( "${belarusbank.api.url}" )
     private String belarusbankApiUrl;
 
 
-    public UserService(UserRepository userRepository, RestTemplate restTemplate, UserDtoMapper mapper) {
-        this.userRepository = userRepository;
-        this.restTemplate = restTemplate;
-        this.mapper = mapper;
-    }
+//    public UserService(UserRepository userRepository, RestTemplate restTemplate, UserDtoMapper mapper) {
+//        this.userRepository = userRepository;
+//        this.restTemplate = restTemplate;
+//        this.mapper = mapper;
+//    }
 
     public UserDto findUserById(Long id) {
         var maybeUser = userRepository.findById(id);
@@ -42,7 +46,7 @@ public class UserService {
     }
 
     public BigDecimal setPriceToUserDto(UserDto userDto) {
-        BelarusbankDto[] belarusbankDtos = restTemplate.getForEntity(belarusbankApiUrl,
+        BelarusbankDto[] belarusbankDtos = restTemplate.getForEntity(serviceConfiguration.getUrl(),
                 BelarusbankDto[].class).getBody();
 
         if (belarusbankDtos != null) {
@@ -52,7 +56,7 @@ public class UserService {
     }
 
     public BigDecimal getMostProfitablePrice() {
-        var belarusbankDtos = restTemplate.getForEntity(belarusbankApiUrl,
+        var belarusbankDtos = restTemplate.getForEntity(serviceConfiguration.getUrl(),
                 BelarusbankDto[].class).getBody();
         if (belarusbankDtos == null) {
             return BigDecimal.ZERO;
