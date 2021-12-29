@@ -9,6 +9,16 @@ spring:
       hibernate:
         format_sql: true
         physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: liquibase_starter
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 256MB
+      max-request-size: 256MB
 server:
   port: 8081
 
