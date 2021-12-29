@@ -27,9 +27,9 @@ public class FileService {
     private GridFsTemplate gridFsTemplate;
 
     public String saveFile(MultipartFile file) throws IOException {
-        //                 > 16MB
+        //                 < 16MB
         if (file.getSize() < 1024 * 1024 * 16) {
-            return saveShortFile(file.getOriginalFilename(), file);
+            return saveShortFile(file);
         } else {
             return saveLongFile(file);
         }
@@ -62,9 +62,9 @@ public class FileService {
         }
     }
 
-    private String saveShortFile(String title, MultipartFile file) throws IOException {
+    private String saveShortFile(MultipartFile file) throws IOException {
         ShortFile shortFile = ShortFile.builder()
-                .title(title)
+                .title(file.getOriginalFilename())
                 .binary(new Binary(BsonBinarySubType.BINARY, file.getBytes()))
                 .build();
         return shortFileRepository.insert(shortFile).getTitle();
