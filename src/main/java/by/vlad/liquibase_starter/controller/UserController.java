@@ -15,7 +15,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("users/{id}")
+    @GetMapping("/users/{id}")
     private BigDecimal getUserWithPrice(@PathVariable(name = "id") Long id) {
         UserDto userDto = userService.findUserById(id);
         return userService.setPriceToUserDto(userDto);

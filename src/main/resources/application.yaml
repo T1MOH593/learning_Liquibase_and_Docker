@@ -1,7 +1,7 @@
 spring:
   datasource:
     password: postgres
-    url: jdbc:postgresql://localhost:5432/liquibase_starter
+    url: jdbc:postgresql://postgres:5432/liquibase_starter
     username: postgres
   jpa:
     show-sql: true
@@ -11,7 +11,7 @@ spring:
         physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
   data:
     mongodb:
-      host: localhost
+      host: mongodb
       port: 27017
       database: liquibase_starter
   servlet:
